@@ -1,9 +1,7 @@
 package objects3D;
 
 import static org.lwjgl.opengl.GL11.*;
-import GraphicsObjects.Point4f;
 import GraphicsObjects.Utils;
-import GraphicsObjects.Vector4f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
@@ -34,6 +32,7 @@ public class Cyberman {
     static float pink[] = { 1.0f, 0.6f, 0.6f, 1.0f, 1.0f };
 
     Texture[] texturesCyberman;
+
 
     public Cyberman(Texture[] texturesCyberman) {
         this.texturesCyberman = texturesCyberman;
@@ -572,11 +571,5 @@ public class Cyberman {
 
     }
 
-}
 
-/*
- *
- *
- * }
- *
- */
+}
