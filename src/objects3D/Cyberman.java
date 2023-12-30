@@ -32,10 +32,19 @@ public class Cyberman {
     static float pink[] = { 1.0f, 0.6f, 0.6f, 1.0f, 1.0f };
 
     Texture[] texturesCyberman;
+    private boolean laserEffect = false;
 
 
     public Cyberman(Texture[] texturesCyberman) {
         this.texturesCyberman = texturesCyberman;
+    }
+
+    public void setLaserEffect() {
+        laserEffect = true;
+    }
+
+    public void forceTurnOffLaserEffect() {
+        laserEffect = false;
     }
 
     // Implement using notes in Animation lecture
@@ -560,6 +569,20 @@ public class Cyberman {
                     glEnable(GL_TEXTURE_2D);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                     texSphere.DrawTexSphere(0.2f, 32, 32, texturesCyberman[3]);
+
+                    if (laserEffect) {
+                        glColor3f(magenta[0], magenta[1], magenta[2]);
+                        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(blue));
+                        glPushMatrix();
+                        {
+                            glTranslatef(0.0f, 0.0f, 0.0f);
+                            glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
+                            cylinder.drawCylinder(0.05f, 100.6f, 32);
+                            System.out.println("Laser Fired");
+
+                        }
+                        glPopMatrix();
+                    }
 
                 }
                 glPopMatrix();
