@@ -206,26 +206,26 @@ public class MainWindow {
 		if (Keyboard.isKeyDown(Keyboard.KEY_A))
 			BadAnimation = !BadAnimation;
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-			// move right
+		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+			// move to the east
 			paceX1 += 0.35f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
-			// move left
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			// move to the west
 			paceX1 -= 0.35f;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			// move upward
 			paceY1 += 0.35f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
 			// move downward
 			paceY1 -= 0.35f;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-			// move forward
+		if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
+			// move to the north
 			if (!isCollidingWithSpace(paceZ1)) {
 				System.out.println("Colliding Happened");
 			} else {
@@ -234,8 +234,8 @@ public class MainWindow {
 			System.out.println("NewPaceZ1: " + paceZ1 + " SpaceMinZ: " + spaceMinZ + " SpaceMaxZ: " + spaceMaxZ);
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
-			// move backward
+		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			// move to the south
 			paceZ1 += 0.35f;
 			System.out.println("NewPaceZ1: " + paceZ1 + " SpaceMinZ: " + spaceMinZ + " SpaceMaxZ: " + spaceMaxZ);
 		}
@@ -252,9 +252,9 @@ public class MainWindow {
 			isCameraFollowing = !isCameraFollowing;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-			Earth = !Earth;
-		}
+//		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+//			Earth = !Earth;
+//		}
 
 
 		updateHumanPosition(delta);
