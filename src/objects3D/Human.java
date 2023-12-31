@@ -33,6 +33,7 @@ public class Human {
 	static float pink[] = { 1.0f, 0.6f, 0.6f, 1.0f, 1.0f };
 
 	private boolean specialEffect = false;
+	private boolean resetPosition = false;
 
 	Texture[] texturesHuman;
 	public Human(Texture[] texturesHuman) {
@@ -45,6 +46,7 @@ public class Human {
 
 	public void forceTurnOffSpecialEffect() {
 		specialEffect = false;
+		resetPosition = false;
 	}
 
 	// Implement using notes in Animation lecture
@@ -67,6 +69,7 @@ public class Human {
 			glTranslatef(0.0f, 0.5f, 0.0f);
 			glScalef(0.1f, 0.1f, 0.1f);
 			sphere.drawSphere(50.0f, 16, 16);
+			resetPosition = true;
 
 		}
 
