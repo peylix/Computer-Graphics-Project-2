@@ -95,7 +95,28 @@ public class MainWindow {
 	float staticX1 = 285;
 	float staticY1 = 380;
 	float staticZ1 = 0;
+	boolean turnOnLaserEffect = false;
+	private float humanSpeed = 0.2f; // Adjust as necessary for movement speed
+	private int humanDirection = 1; // 1 for one direction, -1 for the opposite
+	float initialHumanX = 2785;
+	float initialHumanY = 380;
+	float initialHumanZ = 200;
 
+	float initialCybermanX = 285;
+	float initialCybermanY = 380;
+	float initialCybermanZ = 0;
+
+	private boolean laserHit = false;
+	private long laserHitTime = 0;
+	private final long resetDelay = 500;
+
+	float spaceMinZ = -29.0f;
+	float spaceMaxZ = 100000;
+
+	private World world;
+
+	private boolean isRotating = false;
+	private boolean isCameraFollowing = false;
 
 
 	// static GLfloat light_position[] = {0.0, 100.0, 100.0, 0.0};
@@ -125,7 +146,7 @@ public class MainWindow {
 			Display.update();
 			Display.sync(120); // cap fps to 120fps
 			long passed = getTime() - StartTime;
-			System.out.println("Time passed: " + passed);
+//			System.out.println("Time passed: " + passed);
 		}
 
 		Display.destroy();
@@ -146,11 +167,15 @@ public class MainWindow {
 			// System.out.println("Mouse drag mode");
 			MyArcball.startBall(MouseX, MouseY, 1200, 800);
 			dragMode = true;
+			turnOnLaserEffect = true;
+			System.out.println("Mouse Pressed");
 
 		} else if (!MouseButonPressed) {
 			// System.out.println("Mouse drag mode end ");
 			MouseOnepressed = false;
 			dragMode = false;
+			turnOnLaserEffect = false;
+
 		}
 
 		if (dragMode) {
@@ -180,19 +205,59 @@ public class MainWindow {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_A))
 			BadAnimation = !BadAnimation;
-		if (Keyboard.isKeyDown(Keyboard.KEY_D))
-			x += 0.35f * delta;
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_W))
-			y += 0.35f * delta;
-		if (Keyboard.isKeyDown(Keyboard.KEY_S))
-			y -= 0.35f * delta;
+		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+			// move right
+			paceX1 += 0.35f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
+			// move left
+			paceX1 -= 0.35f;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			// move upward
+			paceY1 += 0.35f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+			// move downward
+			paceY1 -= 0.35f;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+			// move forward
+			if (!isCollidingWithSpace(paceZ1)) {
+				System.out.println("Colliding Happened");
+			} else {
+				paceZ1 -=0.35f;
+			}
+			System.out.println("NewPaceZ1: " + paceZ1 + " SpaceMinZ: " + spaceMinZ + " SpaceMaxZ: " + spaceMaxZ);
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+			// move backward
+			paceZ1 += 0.35f;
+			System.out.println("NewPaceZ1: " + paceZ1 + " SpaceMinZ: " + spaceMinZ + " SpaceMaxZ: " + spaceMaxZ);
+		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q))
-			rotation += 0.35f * delta;
+		{
+			isRotating = true;
+			currentAngle += 0.35f * delta;
+		} else {
+			isRotating = false;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
+			isCameraFollowing = !isCameraFollowing;
+		}
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 			Earth = !Earth;
 		}
+
+
+		updateHumanPosition(delta);
 		
 		if (waitForKeyrelease) // check done to see if key is released
 		{
@@ -226,6 +291,40 @@ public class MainWindow {
 			y = 0;
 		if (y > 800)
 			y = 800;
+
+
+		if (turnOnLaserEffect) {
+			boolean isLaserHit = checkLaserCollision();
+			if (isLaserHit && !laserHit) {
+				laserHit = true;
+				laserHitTime = getTime(); // Record the time when the laser hit
+				human.setSpecialEffect();
+			}
+			System.out.println("Laser Collision: " + isLaserHit);
+		} else {
+			laserHit = false;
+			human.forceTurnOffSpecialEffect();
+		}
+
+		if (laserHit && getTime() - laserHitTime > resetDelay) {
+			resetHumanPosition(); // Reset human position after delay
+			laserHit = false; // Reset the flag
+		}
+
+		// Check if the laser hits the ball
+		if (turnOnLaserEffect) {
+			if (checkLaserBallCollision() == 0) {
+				world.resetSecondBallMovement();
+			} else if (checkLaserBallCollision() == 1) {
+				world.resetOtherBallMovement();
+			}
+//			world.resetBallMovement();
+		}
+
+		// Update the physics of the World
+		float deltaTimeInSeconds = delta / 1000.0f; // Convert delta to seconds
+		world.updatePhysicsSecondBall(deltaTimeInSeconds);
+		world.updatePhysicsOtherBall(deltaTimeInSeconds);
 
 		updateFPS(); // update FPS Counter
 
@@ -292,12 +391,12 @@ public class MainWindow {
 		// glEnable(GL_LIGHT0); // switch light #0 on // I've setup specific materials
 		// so in real light it will look abit strange
 
-		glLight(GL_LIGHT1, GL_POSITION, lightPos); // specify the
+		glLight(GL_LIGHT1, GL_POSITION, lightPos2); // specify the
 													// position
 													// of the
 													// light
 		glEnable(GL_LIGHT1); // switch light #0 on
-		glLight(GL_LIGHT1, GL_DIFFUSE, Utils.ConvertForGL(spot));
+		glLight(GL_LIGHT1, GL_AMBIENT, Utils.ConvertForGL(spot));
 
 		glLight(GL_LIGHT2, GL_POSITION, lightPos3); // specify
 													// the
@@ -375,47 +474,100 @@ public class MainWindow {
 
 
 
-		if (myDelta <= 3000 && myDelta > 0) {
-			// set the camera
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-			glMatrixMode(GL_MODELVIEW);
+		if (isCameraFollowing) {
+			// Calculate camera position based on the cyberman's position
+			float cameraDistance = 600.0f; // Distance behind the cyberman
+			float cameraHeight = 1500.0f; // Height above the cyberman
 
-			GLU.gluLookAt(1050, 1350, -1200, 1000, 800, -500, 0, 1, 0);
+			// Calculate the camera's position relative to the cyberman
+			float angleRadians = (float) Math.toRadians(currentAngle + 270); // Convert angle to radians
+			float cameraOffsetX = (float) Math.sin(angleRadians) * cameraDistance;
+			float cameraOffsetZ = (float) Math.cos(angleRadians) * cameraDistance;
 
-		} else if (myDelta <= 21000 && myDelta > 3000) {
-			// set the camera
+			float cameraX;
+			float cameraY;
+			float cameraZ;
+			if (isRotating) {
+				cameraX = paceZ1 + cameraOffsetX;
+				cameraY = paceY1 + cameraHeight;
+				cameraZ = paceX1 + cameraOffsetZ;
+			} else {
+				cameraX = paceZ1 * 100;
+				cameraY = paceY1 + cameraHeight;
+				cameraZ = paceX1 * 100;
+			}
+
+			System.out.println("paceX1: " + paceX1 + " paceZ1: " + paceZ1);
+
+			// Cyberman's position (where the camera should look at)
+			float cybermanX = paceX1 + 100;
+			float cybermanY = paceY1 + 1500;
+			float cybermanZ = paceZ1 - 50;
+
+//		System.out.println("CybermanX: " + cybermanX);
+
+			// Set the camera
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
 			glMatrixMode(GL_MODELVIEW);
-			GLU.gluLookAt(-950, 550, -2200, 1000, 800, -500, 0, 1, 0);
-		} else if (myDelta <= 31000 && myDelta > 21000) {
-			// set the camera
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-			glMatrixMode(GL_MODELVIEW);
-			GLU.gluLookAt(-950, 550, -2200,1000, 800, -500, 0, 1, 0);
-		} else if (myDelta <= 46000 && myDelta > 31000) {
-			// set the camera
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-			glMatrixMode(GL_MODELVIEW);
-			GLU.gluLookAt(850, 550, -3800,1000, 800, -500, 0, 1, 0);
+			GLU.gluLookAt(cameraX, cameraY, cameraZ, // Camera position
+					cybermanX, cybermanY, cybermanZ, // Look at position (cyberman position)
+					0, 1, 0); // Up direction
+
 		} else {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
 			glMatrixMode(GL_MODELVIEW);
-			GLU.gluLookAt(550, 450, 2200, 1000, 800, -500, 0, 1, 0);
+			GLU.gluLookAt(-350, 1250, -3500, 1000, 800, -500, 0, 1, 0);
 		}
 
 
+
+
+
+//		if (myDelta <= 3000 && myDelta > 0) {
+//			// set the camera
+//			glMatrixMode(GL_PROJECTION);
+//			glLoadIdentity();
+//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
+//			glMatrixMode(GL_MODELVIEW);
+//
+//			GLU.gluLookAt(1050, 1350, -1200, 1000, 800, -500, 0, 1, 0);
+//
+//		} else if (myDelta <= 21000 && myDelta > 3000) {
+//			// set the camera
+//			glMatrixMode(GL_PROJECTION);
+//			glLoadIdentity();
+//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
+//			glMatrixMode(GL_MODELVIEW);
+//			GLU.gluLookAt(-950, 550, -2200, 1000, 800, -500, 0, 1, 0);
+//		} else if (myDelta <= 31000 && myDelta > 21000) {
+//			// set the camera
+//			glMatrixMode(GL_PROJECTION);
+//			glLoadIdentity();
+//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
+//			glMatrixMode(GL_MODELVIEW);
+//			GLU.gluLookAt(-950, 550, -2200,1000, 800, -500, 0, 1, 0);
+//		} else if (myDelta <= 46000 && myDelta > 31000) {
+//			// set the camera
+//			glMatrixMode(GL_PROJECTION);
+//			glLoadIdentity();
+//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
+//			glMatrixMode(GL_MODELVIEW);
+//			GLU.gluLookAt(850, 550, -3800,1000, 800, -500, 0, 1, 0);
+//		} else {
+//			glMatrixMode(GL_PROJECTION);
+//			glLoadIdentity();
+//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
+//			glMatrixMode(GL_MODELVIEW);
+//			GLU.gluLookAt(550, 450, 2200, 1000, 800, -500, 0, 1, 0);
+//		}
+
+
 		// draw the sky and the land
-		World world = new World(texturesWorld);
+//		World world = new World(texturesWorld);
 		world.drawWorld();
 
 
@@ -434,11 +586,10 @@ public class MainWindow {
 //		}
 
 
-		// Hibernation Chambers of the two cybermen in the screen
+		// Hibernation Chamber of the cyberman in the screen
 		glPushMatrix();
 		TexCube hibernationChamber = new TexCube();
 		glColor3f(white[0], white[1], white[2]);
-//		glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(pink));
 		glTranslatef(300, 300, 0);
 		glScalef(100f, 400f, 100f);
 
@@ -454,6 +605,8 @@ public class MainWindow {
 
 		hibernationChamber.drawTexCube();
 		glPopMatrix();
+
+
 
 		// doorway to BJUT
 		glPushMatrix();
@@ -477,25 +630,6 @@ public class MainWindow {
 		doorway.drawTexCube();
 		glPopMatrix();
 
-//		glPushMatrix();
-//		TexCube hibernationChamber2 = new TexCube();
-//		glColor3f(white[0], white[1], white[2]);
-////		glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(pink));
-//		glTranslatef(300, 300, -700);
-//		glScalef(100f, 400f, 100f);
-//
-//
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-//
-//		// Bind the texture to the surface
-//		Color.white.bind();
-//		textureCube.bind();
-//		glEnable(GL_TEXTURE_2D);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//		glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
-//
-//		hibernationChamber2.drawTexCube();
-//		glPopMatrix();
 
 
 
@@ -528,72 +662,32 @@ public class MainWindow {
 //			glTranslatef(posn_x * 3.0f, 0.0f, posn_y * 3.0f);
 		}
 
-		shadow.drawShadow(delta, !BadAnimation); // give a delta for the Human object ot be animated
+		shadow.drawShadow(delta, !BadAnimation); // give a delta for the Human object to be animated
 
 		glPopMatrix();
 
+
 		glPushMatrix();
-		glTranslatef(285, 380, 0);
+		glTranslatef(initialCybermanX, initialCybermanY, initialCybermanZ);
 		glScalef(90f, 90f, 90f);
 		glRotatef(-90.0f, 0, 1, 0);
 
+
+
 		if (!BadAnimation) {
 
-//			if (myDelta > 5000 && myDelta < 100000){
-//				glTranslatef(paceX1, 0.0f, -paceZ1);
-//			} else {
-				// insert your animation code to correct the postion for the human rotating
-//				glTranslatef(paceX1, 0.0f, posn_y * 3.0f);
-//				// Rotate the Human object using the thetaDeg variable
-//				glRotatef(-thetaDeg + 180, 0, 1, 0);
-//			glTranslatef(posn_x * 3.0f, 0.0f, posn_y * 3.0f);
-//			}
 
-			if (myDelta <= 3500 && myDelta > 0) {
-				paceZ1 -= 0.2f;
-
-				glTranslatef(paceX1, paceY1, paceZ1); // Move forward. Leave the hibernation chamber.
-				glRotatef(currentAngle, 0, 1, 0);
-
-			} else if (myDelta <= 7000 && myDelta > 3500) {
-				glTranslatef(paceX1, paceY1, paceZ1); // Stop for a while.
-				glRotatef(currentAngle, 0, 1, 0);
-			} else if (myDelta <= 12000 && myDelta > 7000) {
-				currentAngle = thetaDeg + 45;
-				glTranslatef(paceX1, paceY1, paceZ1); // Rotate to the left.
-				glRotatef(currentAngle, 0, 1, 0);
-
-			}
-			else if (myDelta <= 13000 && myDelta > 12000) {
-
-				paceX1 -= 0.2f;
-				glTranslatef(paceX1, paceY1, paceZ1); // Move for a distance.
-				glRotatef(currentAngle, 0, 1, 0);
-			} else if (myDelta <= 17500 && myDelta > 13000) {
-				currentAngle -= 1.5f;
-				glTranslatef(paceX1, paceY1, paceZ1); // Rotate to the right.
-				glRotatef(currentAngle, 0, 1, 0);
-			} else if (myDelta <= 21000 && myDelta > 17500) {
-				glTranslatef(paceX1, paceY1, paceZ1); // Stop for a while.
-				glRotatef(currentAngle, 0, 1, 0);
-			} else if (myDelta <= 25500 && myDelta > 21000){
-				currentAngle += 1.3f;
-				glTranslatef(paceX1, paceY1, paceZ1); // Rotate to the left.
-				glRotatef(currentAngle, 0, 1, 0);
+			glTranslatef(paceX1, paceY1, paceZ1);
+			glRotatef(currentAngle, 0, 1, 0);
+			if (turnOnLaserEffect) {
+				cyberman.setLaserEffect();
 			} else {
-				paceX1 -= 0.1f;
-				glTranslatef(paceX1, paceY1, paceZ1); // Leave the scene.
-				glRotatef(currentAngle, 0, 1, 0);
+				cyberman.forceTurnOffLaserEffect();
+
 			}
-//			else {
-//				glPopMatrix();
-//				glPushMatrix();
-//				paceX1 = 3000;
-//				paceZ1 = 5000;
-//				glTranslatef(285, 380, 200);
-//				glRotatef(currentAngle, 0, 1, 0);
-//			}
-//			glRotatef(-thetaDeg + 180, 0, 1, 0);
+
+
+
 
 		} else {
 
@@ -609,39 +703,15 @@ public class MainWindow {
 
 
 		glPushMatrix();
-		glTranslatef(3385, 380, 200);
+		glTranslatef(initialHumanX, initialHumanY, initialHumanZ);
 		glScalef(90f, 90f, 90f);
 		glRotatef(90.0f, 0, 1, 0);
 
+
 		if (!BadAnimation) {
-			if (myDelta <= 2900 && myDelta > 0) {
 
-			} else if (myDelta <= 7000 && myDelta > 2900) {
-				paceZ2 -= 0.2f;
-				glTranslatef(paceX2, paceY2, paceZ2);
-			} else if (myDelta <= 8000 && myDelta > 7000) {
-				human.setSpecialEffect();
-				glTranslatef(paceX2, paceY2, paceZ2);
-			} else if (myDelta <= 12000 && myDelta > 8000) {
-				human.forceTurnOffSpecialEffect();
-				paceZ2 = 0.0f;
-				glTranslatef(paceX2, paceY2, paceZ2);
-			} else if (myDelta <= 13000 && myDelta > 12000) {
-				paceX2 += 0.2f;
-				glTranslatef(paceX2, paceY2, paceZ2);
-			} else if (myDelta <= 15000 && myDelta > 13000) {
+			glTranslatef(paceX2, paceY2, paceZ2);
 
-			} else if (myDelta <= 20500 && myDelta > 15000) {
-				paceZ2 -= 0.2f;
-				glTranslatef(paceX2, paceY2, paceZ2);
-			} else if (myDelta <= 22000 && myDelta > 20500) {
-				human.setSpecialEffect();
-				glTranslatef(paceX2, paceY2, paceZ2);
-			} else {
-				human.forceTurnOffSpecialEffect();
-				paceZ2 = 0.0f;
-				glTranslatef(paceX2, paceY2, paceZ2);
-			}
 		} else {
 
 			// bad animation version
@@ -678,6 +748,117 @@ public class MainWindow {
 		}
 
 	}
+	private boolean checkLaserCollision() {
+
+
+		float cybermanX = paceX1;
+		float humanX = paceX2;
+
+		float cybermanY = paceY1;
+		float humanY = paceY2;
+
+		float cybermanZ = paceZ1;
+		float humanZ = paceZ2;
+
+		float currentAngleCyberman = calculateCybermanCurrentAngle();
+		float angleToHuman = calculateHumanCurrentAngle();
+
+		// Adjust for 360-degree wraparound
+		float angleDifference = Math.abs(currentAngleCyberman - angleToHuman);
+		angleDifference = (angleDifference + 180) % 360 - 180; // Normalize difference to [-180, 180]
+
+		System.out.println("CybermanAngle: " + currentAngleCyberman + " AngleToHuman: " + angleToHuman + " AngleDifference: " + angleDifference);
+		System.out.println("CybermanY: " + cybermanY + " HumanY: " + humanY);
+
+		// Check if Cyberman is facing the Human within a certain tolerance
+		return Math.abs(cybermanY - humanY) < 3 && Math.abs(angleDifference) < 20;
+	}
+
+	private void updateHumanPosition(int delta) {
+
+		paceX2 += humanSpeed * humanDirection;
+
+
+		if (paceX2 > 20 || paceX2 < -20) {
+			humanDirection *= -1;
+		}
+	}
+
+	private float calculateHumanCurrentAngle() {
+		// Calculate the actual position of the Cyberman and the Human
+		float cybermanPosX = initialCybermanX + paceX1; // Cyberman's current X position
+		float cybermanPosZ = initialCybermanZ + paceZ1; // Cyberman's current Z position
+		float humanPosX = initialHumanX + paceX2  + 2498;       // Human's current X position
+		float humanPosZ = initialHumanZ + paceZ2 - 228;       // Human's current Z position
+
+		// Calculate the differences in positions
+		float deltaX = humanPosX - cybermanPosX; // Difference in X from Cyberman to Human
+		float deltaZ = humanPosZ - cybermanPosZ; // Difference in Z from Cyberman to Human
+
+		// Debugging print statements (optional)
+		System.out.println("Cyberman Position - X: " + cybermanPosX + ", Z: " + cybermanPosZ);
+		System.out.println("Human Position - X: " + humanPosX + ", Z: " + humanPosZ);
+		System.out.println("Delta - X: " + deltaX + ", Z: " + deltaZ);
+
+		// Calculate the angle in radians
+		float angleRadians = (float) Math.atan2(deltaZ, deltaX);
+
+		// Convert radians to degrees and normalize
+		float angleDegrees = (float) Math.toDegrees(angleRadians);
+		angleDegrees = (angleDegrees + 360) % 360;
+
+		return angleDegrees;
+	}
+
+
+
+	private float calculateCybermanCurrentAngle() {
+
+
+		currentAngle = currentAngle % 360;
+		float angleDegrees = currentAngle;
+
+		// Normalize the angle
+		if (angleDegrees < 0) {
+			angleDegrees += 360;
+		}
+
+		return angleDegrees;
+	}
+
+	private void resetHumanPosition() {
+		paceX2 = initialHumanX - 2785; // Reset human X position
+		paceY2 = initialHumanY - 380;  // Reset human Y position
+		paceZ2 = initialHumanZ - 200;  // Reset human Z position
+	}
+	private boolean isCollidingWithSpace(float z) {
+		return z >= spaceMinZ && z <= spaceMaxZ;
+	}
+
+	private int checkLaserBallCollision() {
+		float currentAngleCyberman = calculateCybermanCurrentAngle();
+
+
+		float angleDifference = Math.abs(currentAngleCyberman - 270);
+//		angleDifference = (angleDifference + 180) % 360 - 180; // Normalize difference to [-180, 180]
+
+		System.out.println("CybermanAngle: " + currentAngleCyberman + " AngleDifference: " + angleDifference);
+
+		if (Math.abs(angleDifference) <= 8 && Math.abs(angleDifference) > 0) {
+			return 0;
+		} else if (Math.abs(angleDifference) <= 20 && Math.abs(angleDifference) > 8) {
+			return 1;
+		} else {
+			return -1;
+		}
+
+
+
+		// Check if Cyberman is facing the Human within a certain tolerance
+//		return Math.abs(angleDifference) < 20;
+
+	}
+
 
 	public static void main(String[] argv) {
 		MainWindow hello = new MainWindow();
@@ -695,7 +876,7 @@ public class MainWindow {
 	Cyberman cyberman;
 	Human human;
 
-//	Cyberman cyberman2;
+
 
 	/*
 	 * Any additional textures for your assignment should be written in here. Make a
@@ -738,10 +919,12 @@ public class MainWindow {
 		System.out.println("textureWorld2 loaded okay ");
 		texturesWorld[3] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/Project_Texture_2023.png"));
 		System.out.println("textureWorld3 loaded okay ");
+		texturesWorld[4] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/galaxy.png"));
+		System.out.println("textureWorld4 loaded okay ");
+
+		world = new World(texturesWorld);
 
 		cyberman = new Cyberman(texturesHumanoid);
-//		cyberman2 = new Cyberman(texturesHumanoid);
-
 		human = new Human(texturesHumanoid);
 
 
