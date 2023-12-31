@@ -44,18 +44,32 @@ public class World {
         GL11.glPopMatrix();
 
 
-        // Draw the project texture 2023
+        // Draw the outer space
         GL11.glPushMatrix();
-        TexCube texture2023 = new TexCube();
-        GL11.glTranslatef(3000,1200,0);
-        GL11.glScalef(8f, 1000f, 1000f);
+        TexCube space = new TexCube();
+        GL11.glTranslatef(3000,1200,-200);
+        GL11.glScalef(8f, 3000f, 4000f);
         GL11.glRotatef(90.0f, 0.0f, 0.0f, 0.0f);
         Color.white.bind();
-        texturesWorld[3].bind();
+        texturesWorld[4].bind();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glTexParameteri( GL11.GL_TEXTURE_2D,  GL11.GL_TEXTURE_MAG_FILTER,  GL11.GL_NEAREST);
-        texture2023.drawTexCube();
+        space.drawTexCube();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glPopMatrix();
+
+//        // Draw the ucd scene
+//        GL11.glPushMatrix();
+//        TexCube texture2023 = new TexCube();
+//        GL11.glTranslatef(3000,1200,-1500);
+//        GL11.glScalef(8f, 1000f, 1000f);
+//        GL11.glRotatef(90.0f, 0.0f, 0.0f, 0.0f);
+//        Color.white.bind();
+//        texturesWorld[3].bind();
+//        GL11.glEnable(GL11.GL_TEXTURE_2D);
+//        GL11.glTexParameteri( GL11.GL_TEXTURE_2D,  GL11.GL_TEXTURE_MAG_FILTER,  GL11.GL_NEAREST);
+//        texture2023.drawTexCube();
+//        GL11.glDisable(GL11.GL_TEXTURE_2D);
+//        GL11.glPopMatrix();
     }
 }
