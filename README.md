@@ -19,5 +19,4 @@ Keyboard:
 
 Mouse:
 + Click the mouse to fire laser
-  + 
-    *If the laser follows the direction of the Human object, it will force the Human to back to the initial place; if it hits a balloon, the position of the balloon will be set to the initial value.*
+  + *If the laser follows the direction of the Human object, it will force the Human to back to the initial place; if it hits a balloon, the position of the balloon will be set to the initial value.*
