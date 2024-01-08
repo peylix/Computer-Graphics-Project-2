@@ -146,7 +146,7 @@ public class MainWindow {
             renderGL();
             Display.update();
             Display.sync(120); // cap fps to 120fps
-            long passed = getTime() - StartTime;
+//            long passed = getTime() - StartTime;
 //			System.out.println("Time passed: " + passed);
         }
 
