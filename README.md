@@ -2,7 +2,7 @@
 
 An interactive animated scene built with Lightweight Java Game Library (LWJGL).
 
-This scene is created based on my project 1 of COMP3033J Computer Graphics. Compared to the previous one, this project allows the user to control the character to move around.
+This OpenGL application is created based on my Project 1 for COMP3033J Computer Graphics, which was built upon my previous assignments and the foundational code provided by the course. Compared to the Project 1, this application allows the user to control and navigate the character's movements and actions.
 
 ## Manual for interaction
 *Assuming the direction of the galaxy photo is the north*
@@ -20,3 +20,7 @@ Keyboard:
 Mouse:
 + Click the mouse to fire laser
   + *If the laser follows the direction of the Human object, it will force the Human to back to the initial place; if it hits a balloon, the position of the balloon will be set to the initial value.*
+
+
+## Screenshot
+![screenshot.png](screenshot.png)

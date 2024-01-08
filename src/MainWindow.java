@@ -21,11 +21,8 @@ import org.newdawn.slick.util.ResourceLoader;
 import GraphicsObjects.Arcball;
 import GraphicsObjects.Utils;
 
-//Main windows class controls and creates the 3D virtual world , please do not change this class but edit the other classes to complete the assignment. 
-// Main window is built upon the standard Helloworld LWJGL class which I have heavily modified to use as your standard openGL environment. 
-// 
 
-// Do not touch this class, I will be making a version of it for your 3rd Assignment 
+
 public class MainWindow {
 
 	private boolean MouseOnepressed = true;
@@ -92,9 +89,6 @@ public class MainWindow {
 	float paceY2 = 0.0f;
 	float paceZ2 = 0.0f;
 	float currentAngle = 0.0f;
-	float staticX1 = 285;
-	float staticY1 = 380;
-	float staticZ1 = 0;
 	boolean turnOnLaserEffect = false;
 	private float humanSpeed = 0.2f; // Adjust as necessary for movement speed
 	private int humanDirection = 1; // 1 for one direction, -1 for the opposite
@@ -164,14 +158,12 @@ public class MainWindow {
 
 		if (MouseButonPressed && !MouseOnepressed) {
 			MouseOnepressed = true;
-			// System.out.println("Mouse drag mode");
 			MyArcball.startBall(MouseX, MouseY, 1200, 800);
 			dragMode = true;
 			turnOnLaserEffect = true;
 			System.out.println("Mouse Pressed");
 
 		} else if (!MouseButonPressed) {
-			// System.out.println("Mouse drag mode end ");
 			MouseOnepressed = false;
 			dragMode = false;
 			turnOnLaserEffect = false;
@@ -193,7 +185,6 @@ public class MainWindow {
 				OrthoNumber = 610;
 			}
 
-			// System.out.println("Orth nubmer = " + OrthoNumber);
 
 		}
 
@@ -258,29 +249,6 @@ public class MainWindow {
 
 
 		updateHumanPosition(delta);
-		
-		if (waitForKeyrelease) // check done to see if key is released
-		{
-			if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-
-				DRAWGRID = !DRAWGRID;
-				Keyboard.next();
-				if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-					waitForKeyrelease = true;
-				} else {
-					waitForKeyrelease = false;
-
-				}
-			}
-		}
-
-		/** to check if key is released */
-		if (Keyboard.isKeyDown(Keyboard.KEY_G) == false) {
-			waitForKeyrelease = true;
-		} else {
-			waitForKeyrelease = false;
-
-		}
 
 		// keep quad on the screen
 		if (x < 0)
@@ -527,63 +495,11 @@ public class MainWindow {
 
 
 
-//		if (myDelta <= 3000 && myDelta > 0) {
-//			// set the camera
-//			glMatrixMode(GL_PROJECTION);
-//			glLoadIdentity();
-//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-//			glMatrixMode(GL_MODELVIEW);
-//
-//			GLU.gluLookAt(1050, 1350, -1200, 1000, 800, -500, 0, 1, 0);
-//
-//		} else if (myDelta <= 21000 && myDelta > 3000) {
-//			// set the camera
-//			glMatrixMode(GL_PROJECTION);
-//			glLoadIdentity();
-//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-//			glMatrixMode(GL_MODELVIEW);
-//			GLU.gluLookAt(-950, 550, -2200, 1000, 800, -500, 0, 1, 0);
-//		} else if (myDelta <= 31000 && myDelta > 21000) {
-//			// set the camera
-//			glMatrixMode(GL_PROJECTION);
-//			glLoadIdentity();
-//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-//			glMatrixMode(GL_MODELVIEW);
-//			GLU.gluLookAt(-950, 550, -2200,1000, 800, -500, 0, 1, 0);
-//		} else if (myDelta <= 46000 && myDelta > 31000) {
-//			// set the camera
-//			glMatrixMode(GL_PROJECTION);
-//			glLoadIdentity();
-//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-//			glMatrixMode(GL_MODELVIEW);
-//			GLU.gluLookAt(850, 550, -3800,1000, 800, -500, 0, 1, 0);
-//		} else {
-//			glMatrixMode(GL_PROJECTION);
-//			glLoadIdentity();
-//			GLU.gluPerspective(45f, 1.5f, 2.8f, 20000);
-//			glMatrixMode(GL_MODELVIEW);
-//			GLU.gluLookAt(550, 450, 2200, 1000, 800, -500, 0, 1, 0);
-//		}
-
-
 		// draw the sky and the land
 //		World world = new World(texturesWorld);
 		world.drawWorld();
 
 
-		/*
-		 * This code draws a grid to help you view the human models movement You may
-		 * change this code to move the grid around and change its starting angle as you
-		 * please
-		 */
-//		if (DRAWGRID) {
-//			glPushMatrix();
-//			Grid MyGrid = new Grid();
-//			glTranslatef(600, 400, 0);
-//			glScalef(200f, 200f, 200f);
-//			MyGrid.DrawGrid();
-//			glPopMatrix();
-//		}
 
 
 		// Hibernation Chamber of the cyberman in the screen
@@ -634,18 +550,6 @@ public class MainWindow {
 
 
 
-//		glPushMatrix();
-//		TexCube MyTexCube = new TexCube();
-//		glColor3f(white[0], white[1], white[2]);
-
-
-//		glPushMatrix();
-//		Grid grid = new Grid();
-//		glTranslatef(285, 210, 0);
-//		glScalef(90f, 90f, 90f);
-//		grid.DrawGrid();
-//		glPopMatrix();
-
 
 		// draw the shadow of the cyberman
 		glPushMatrix();
@@ -689,10 +593,6 @@ public class MainWindow {
 
 
 
-		} else {
-
-			// bad animation version
-//			glTranslatef(posn_x * 3.0f, 0.0f, posn_y * 3.0f);
 		}
 
 		cyberman.drawCyberman(delta, !BadAnimation); // give a delta for the Human object ot be animated
@@ -712,40 +612,13 @@ public class MainWindow {
 
 			glTranslatef(paceX2, paceY2, paceZ2);
 
-		} else {
-
-			// bad animation version
-//			glTranslatef(posn_x * 3.0f, 0.0f, posn_y * 3.0f);
 		}
 
 		human.drawHuman(delta, !BadAnimation); // give a delta for the Human object ot be animated
 
 		glPopMatrix();
 
-		/*
-		 * This code puts the earth code in which is larger than the human so it appears
-		 * to change the scene
-		 */
-		if (Earth) {
-			// Globe in the centre of the scene
-			glPushMatrix();
-			TexSphere MyGlobe = new TexSphere();
-			// TexCube MyGlobe = new TexCube();
-			glTranslatef(500, 500, 500);
-			glScalef(140f, 140f, 140f);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-			Color.white.bind();
-			texture.bind();
-			glEnable(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-			MyGlobe.DrawTexSphere(8f, 100, 100, texture);
-			// MyGlobe.DrawTexCube();
-			glPopMatrix();
-		}
 
 	}
 	private boolean checkLaserCollision() {
@@ -853,7 +726,6 @@ public class MainWindow {
 		}
 
 
-
 		// Check if Cyberman is facing the Human within a certain tolerance
 //		return Math.abs(angleDifference) < 20;
 
@@ -878,10 +750,7 @@ public class MainWindow {
 
 
 
-	/*
-	 * Any additional textures for your assignment should be written in here. Make a
-	 * new texture variable for each one so they can be loaded in at the beginning
-	 */
+
 	public void init() throws IOException {
 
 		texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/earthspace.png"));
