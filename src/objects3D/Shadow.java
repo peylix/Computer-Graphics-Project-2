@@ -1,11 +1,7 @@
 package objects3D;
 
 import static org.lwjgl.opengl.GL11.*;
-import GraphicsObjects.Point4f;
 import GraphicsObjects.Utils;
-import GraphicsObjects.Vector4f;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
 
 
 public class Shadow {
@@ -17,7 +13,6 @@ public class Shadow {
     public Shadow() {
     }
 
-    // Implement using notes in Animation lecture
     public void drawShadow(float delta, boolean GoodAnimation) {
         // Increase the theta to speed up the frequency of the cyberman
         float theta = (float) (delta * 16 * Math.PI);
@@ -30,7 +25,6 @@ public class Shadow {
 
         Sphere sphere = new Sphere();
         Cylinder cylinder = new Cylinder();
-        TexSphere texSphere = new TexSphere();
 
         glRotatef(90f, 1, 0, 0);
         glScalef(1f, 1f, 0.2f);
@@ -44,10 +38,6 @@ public class Shadow {
             glScalef(1.0f, 1.0f, 1.0f);
             sphere.drawSphere(0.5f, 32, 32);
 
-//			glColor3f(yellow[0], yellow[1], yellow[2]);
-//			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(yellow));
-//			glTranslatef(0.0f, 0.5f, 0.0f);
-//			sphere.drawSphere(0.5f, 32, 32);
 
             // chest
             // Set the color to white to avoid unexpected surface effects
@@ -387,9 +377,6 @@ public class Shadow {
                 //Draw the central emotional inhibitor of the cyberman
                 glPushMatrix();
                 {
-
-
-
                     glTranslatef(0.0f, 2.5f, 0.1f);
                     glScalef(1.0f, 1.0f, 1.0f);
                     sphere.drawSphere(0.2f, 32, 32);

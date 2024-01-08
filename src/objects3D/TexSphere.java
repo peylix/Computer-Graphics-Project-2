@@ -9,10 +9,6 @@ import org.newdawn.slick.util.ResourceLoader;
 import GraphicsObjects.Utils;
 
 public class TexSphere {
-	static float red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	static float green[] = { 0.0f, 1.0f, 0.0f, 1.0f };
-	static float blue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-	static float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	public TexSphere() {
 

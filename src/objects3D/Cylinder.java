@@ -1,10 +1,6 @@
 package objects3D;
 
-import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.opengl.GL11;
-import GraphicsObjects.Point4f;
-import GraphicsObjects.Vector4f;
-import java.math.*;
 
 public class Cylinder {
 

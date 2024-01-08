@@ -1,6 +1,7 @@
 package objects3D;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import GraphicsObjects.Utils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
@@ -9,27 +10,27 @@ import org.newdawn.slick.opengl.Texture;
 public class Cyberman {
 
     // basic colours
-    static float black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    static float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    static float black[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    static float white[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    static float grey[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    static float spot[] = { 0.1f, 0.1f, 0.1f, 0.5f };
+    static float grey[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    static float spot[] = {0.1f, 0.1f, 0.1f, 0.5f};
 
     // primary colours
-    static float red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-    static float green[] = { 0.0f, 1.0f, 0.0f, 1.0f };
-    static float blue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+    static float red[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    static float green[] = {0.0f, 1.0f, 0.0f, 1.0f};
+    static float blue[] = {0.0f, 0.0f, 1.0f, 1.0f};
 
     // secondary colours
-    static float yellow[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-    static float magenta[] = { 1.0f, 0.0f, 1.0f, 1.0f };
-    static float cyan[] = { 0.0f, 1.0f, 1.0f, 1.0f };
+    static float yellow[] = {1.0f, 1.0f, 0.0f, 1.0f};
+    static float magenta[] = {1.0f, 0.0f, 1.0f, 1.0f};
+    static float cyan[] = {0.0f, 1.0f, 1.0f, 1.0f};
 
     // other colours
-    static float orange[] = { 1.0f, 0.5f, 0.0f, 1.0f, 1.0f };
-    static float brown[] = { 0.5f, 0.25f, 0.0f, 1.0f, 1.0f };
-    static float dkgreen[] = { 0.0f, 0.5f, 0.0f, 1.0f, 1.0f };
-    static float pink[] = { 1.0f, 0.6f, 0.6f, 1.0f, 1.0f };
+    static float orange[] = {1.0f, 0.5f, 0.0f, 1.0f, 1.0f};
+    static float brown[] = {0.5f, 0.25f, 0.0f, 1.0f, 1.0f};
+    static float dkgreen[] = {0.0f, 0.5f, 0.0f, 1.0f, 1.0f};
+    static float pink[] = {1.0f, 0.6f, 0.6f, 1.0f, 1.0f};
 
     Texture[] texturesCyberman;
     private boolean laserEffect = false;
@@ -47,7 +48,6 @@ public class Cyberman {
         laserEffect = false;
     }
 
-    // Implement using notes in Animation lecture
     public void drawCyberman(float delta, boolean GoodAnimation) {
         // Increase the theta to speed up the frequency of the cyberman
         float theta = (float) (delta * 16 * Math.PI);
@@ -78,10 +78,6 @@ public class Cyberman {
             glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
             texSphere.DrawTexSphere(0.5f, 32, 32, texturesCyberman[1]);
 
-//			glColor3f(yellow[0], yellow[1], yellow[2]);
-//			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(yellow));
-//			glTranslatef(0.0f, 0.5f, 0.0f);
-//			sphere.drawSphere(0.5f, 32, 32);
 
             // chest
             // Set the color to white to avoid unexpected surface effects
@@ -158,18 +154,6 @@ public class Cyberman {
                         }
                         glPopMatrix();
 
-                        //Draw the central emotional inhibitor of the cyberman (single-color)
-//                        glColor3f(dkgreen[0], dkgreen[1], dkgreen[2]);
-//                        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(blue));
-//                        glPushMatrix();
-//                        {
-//                            glTranslatef(0.0f, -0.1f, 0.6f);
-//
-//                            sphere.drawSphere(0.2f, 32, 32);
-//
-//                        }
-//                        glPopMatrix();
-
 
                         //Draw the left side handle of the cyber helmet for the cyberman
                         glColor3f(grey[0], grey[1], grey[2]);
@@ -202,7 +186,6 @@ public class Cyberman {
 
                         }
                         glPopMatrix();
-
 
 
                         glPushMatrix();
@@ -557,7 +540,6 @@ public class Cyberman {
                 glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(blue));
                 glPushMatrix();
                 {
-
 
 
                     glTranslatef(0.0f, 2.5f, 0.1f);

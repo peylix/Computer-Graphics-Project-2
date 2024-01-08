@@ -1,6 +1,5 @@
 package objects3D;
 
-import org.newdawn.slick.opengl.Texture;
 import static org.lwjgl.opengl.GL11.*;
 import GraphicsObjects.Point4f;
 import GraphicsObjects.Vector4f;

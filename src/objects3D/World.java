@@ -41,7 +41,7 @@ public class World {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glPopMatrix();
 
-        // Draw the sky of the world
+        // Draw the sky dome of the world
         GL11.glPushMatrix();
         InwardTexSphere sky = new InwardTexSphere();
         GL11.glTranslatef(600,200,0);
