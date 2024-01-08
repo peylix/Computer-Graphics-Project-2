@@ -687,12 +687,12 @@ public class MainWindow {
 
         System.out.println("CybermanAngle: " + currentAngleCyberman + " AngleDifference: " + angleDifference);
 
-        if (Math.abs(angleDifference) <= 8 && Math.abs(angleDifference) > 0) {
-            return 0;
+        if (Math.abs(angleDifference) <= 8 && Math.abs(angleDifference) >= 0) {
+            return 0; // The laser follows the direction of the central ball
         } else if (Math.abs(angleDifference) <= 20 && Math.abs(angleDifference) > 8) {
-            return 1;
+            return 1; // The laser follows the direction of the other two balls
         } else {
-            return -1;
+            return -1; // The laser does not follow the direction of any ball.
         }
 
 
