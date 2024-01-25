@@ -119,7 +119,7 @@ public class World {
         secondBallY += secondVelocityY * deltaTime;
 
         // Check for collision with the ground and bounce
-        if (secondBallY < 450) { // Assuming 200 is the ground level
+        if (secondBallY < 450) {
             secondBallY = 450;
             secondVelocityY = -secondVelocityY * 0.8f; // Reverse velocity and apply damping factor for bounce
         }
@@ -133,7 +133,7 @@ public class World {
         otherBallY += otherVelocityY * deltaTime;
 
         // Check for collision with the ground and bounce
-        if (otherBallY < 450) { // Assuming 200 is the ground level
+        if (otherBallY < 450) {
             otherBallY = 450;
             otherVelocityY = -otherVelocityY * 0.8f; // Reverse velocity and apply damping factor for bounce
         }

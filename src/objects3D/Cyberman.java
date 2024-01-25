@@ -373,14 +373,6 @@ public class Cyberman {
                         glPopMatrix();
                     }
                     glPopMatrix();
-                    // right arm
-
-                    // right elbow
-
-                    // right forearm
-                    // right hand
-
-                    // chest
 
                 }
                 glPopMatrix();

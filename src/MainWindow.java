@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
@@ -409,11 +408,7 @@ public class MainWindow {
 
     }
 
-    /*
-     * You can edit this method to add in your own objects / remember to load in
-     * textures in the INIT method as they take time to load
-     *
-     */
+
     public void renderGL() {
         changeOrth();
 
@@ -511,7 +506,6 @@ public class MainWindow {
         glPushMatrix();
         TexCube doorway = new TexCube();
         glColor3f(white[0], white[1], white[2]);
-//		glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(pink));
         glTranslatef(800, 600, -4500);
         glScalef(500f, 500f, 8f);
         glRotatef(90, 0, 0, 0);
@@ -638,7 +632,6 @@ public class MainWindow {
         float deltaX = humanPosX - cybermanPosX; // Difference in X from Cyberman to Human
         float deltaZ = humanPosZ - cybermanPosZ; // Difference in Z from Cyberman to Human
 
-        // Debugging print statements (optional)
         System.out.println("Cyberman Position - X: " + cybermanPosX + ", Z: " + cybermanPosZ);
         System.out.println("Human Position - X: " + humanPosX + ", Z: " + humanPosZ);
         System.out.println("Delta - X: " + deltaX + ", Z: " + deltaZ);

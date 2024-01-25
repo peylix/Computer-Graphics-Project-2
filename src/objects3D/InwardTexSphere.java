@@ -51,7 +51,7 @@ public class InwardTexSphere {
 
                 glTexCoord2f(1.0f - s, t);
 
-                glNormal3f(-x, -y, -z); // Mistake in previous version fixed ( abey 11/1/2018)
+                glNormal3f(-x, -y, -z);
                 glVertex3f(x, y, z); // Top Right corner
 
                 x = (float) (Math.cos(phi + incphi) * Math.cos(theta + inctheta) * radius);
